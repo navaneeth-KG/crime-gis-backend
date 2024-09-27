@@ -1,0 +1,53 @@
+.navbar{
+  width: 100vw;
+  height:60px;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 2vw;
+}
+
+.navbar ul{
+  display: flex;
+  text-decoration: none;
+  list-style: none;
+  gap:20px;
+  padding: 0 20px;
+}
+
+.leaflet-container{
+  height: 90vh;
+  width: 98vw;
+  z-index: 1;
+  margin-left: 2vw;
+}
+
+/* .map{
+  width: 100vw;
+  height: 50vh;
+  position: relative;
+  top: 10px;
+} */
+
+.dashboard-container{
+  width:98vw;
+  background-color: rgb(0, 0, 0);
+  margin-left: 2vw;
+  display: flex
+  
+
+  
+};
+.dashboard-container select{
+  padding-bottom: 2vw
+}
+
+
+.line-chart,.bar-chart{
+  background-color: rgb(17, 17, 17);
+  border-radius: 5px;
+  width: fit-content;
+  padding: 20px;
+  margin: 10px;
+}
