@@ -34,7 +34,8 @@
   width:98vw;
   background-color: rgb(0, 0, 0);
   margin-left: 2vw;
-  display: flex
+  display: flex;
+  flex-wrap: wrap
   
 
   
@@ -44,7 +45,7 @@
 }
 
 
-.line-chart,.bar-chart{
+.line-chart,.bar-chart,.stacked{
   background-color: rgb(17, 17, 17);
   border-radius: 5px;
   width: fit-content;

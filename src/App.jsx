@@ -18,7 +18,10 @@ import "leaflet/dist/leaflet.css"
 import {MapContainer, TileLayer} from 'react-leaflet';
 import {HeatmapLayer} from "react-leaflet-heatmap-layer-v3"
 
+
 import './App.css';
+import StackedBarChart from './components/StackedBarChart/StackedBarChart.jsx';
+import AreaChartt from './components/AreaChartt/AreaChartt.jsx';
 
 
 
@@ -168,6 +171,12 @@ useEffect(()=>{
     </div>
     <div className="bar-chart">
       <Barchart data={ getCrime()}/>
+    </div>
+    <div className="stacked">
+      <StackedBarChart/>
+    </div>
+    <div className="area-chart">
+      <AreaChartt/>
     </div>
    
 
