@@ -13,6 +13,7 @@ import {
   YAxis,
   Tooltip,
   Legend,
+  ResponsiveContainer
 } from "recharts";
 import "leaflet/dist/leaflet.css"
 import {MapContainer, TileLayer} from 'react-leaflet';
@@ -114,15 +115,18 @@ useEffect(()=>{
        <input type='text' placeholder="search"/>
 
       <ul>        
-        <li>home</li>
-        <li>service</li>
         <li>sign in</li>
       </ul>
 
     </nav>
-    <Sidebar/>
+    {/* <Sidebar/> */}
   
-  <MapContainer center={[8.524139, 76.936638
+
+  
+
+  <div className="dashboard-container">
+    <div className="map-container">
+    <MapContainer center={[8.524139, 76.936638
       ]} zoom={13}>
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'>
@@ -145,9 +149,11 @@ useEffect(()=>{
     
    
   </MapContainer>
-  
 
-  <div className="dashboard-container">
+    </div>
+
+
+
     <div className="line-chart">
     <select onChange={(e)=>{setYear(e.target.value)}}>
      {data.features.filter((i)=> (i.properties["STATE/UT"] === "KERALA")).map((item,idx)=>(<option value={item.properties.YEAR} key={idx} >{item.properties.YEAR}</option>))}
@@ -158,9 +164,9 @@ useEffect(()=>{
      <option value="KARNATAKA">KARNATAKA</option>
      <option value="TAMIL NADU">TAMIL NADU</option>
     </select>
-     5<LineChart width={500} height={500} data={data2}
-     margin={{ top: 5,bottom: 5 }}>  
-     <XAxis dataKey="name" angle={-45} height={100} />
+    <ResponsiveContainer>
+    <LineChart  data={data2}>  
+     <XAxis dataKey="name" angle={-30}  />
      <YAxis />
      <Tooltip />
      <Legend />
@@ -168,6 +174,8 @@ useEffect(()=>{
      <Line type="monotone" dataKey="rape" stroke="#ffb219" />
      <Line type="monotone" dataKey="robbery" stroke="#5c97f7" />
      </LineChart>
+    </ResponsiveContainer>
+  
     </div>
     <div className="bar-chart">
       <Barchart data={ getCrime()}/>

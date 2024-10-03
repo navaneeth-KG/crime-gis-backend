@@ -57,7 +57,7 @@ const AreaChartt = () => {
     
     
   return (
-    <div>
+   <ResponsiveContainer>
         <AreaChart
           width={500}
           height={400}
@@ -69,14 +69,16 @@ const AreaChartt = () => {
             bottom: 0,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           {district.length!=0 && district.map((item,index) => <Area type="monotone" dataKey={item._id} stackId="1" stroke={colors[index%colors.length]} fill={colors[index%colors.length]} />)}
         </AreaChart>
+   </ResponsiveContainer>
+
       
-    </div>
+    
   )
 }
 

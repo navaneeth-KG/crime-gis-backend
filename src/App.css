@@ -1,7 +1,7 @@
 .navbar{
   width: 100vw;
   height:60px;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(0, 0, 0);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -17,10 +17,10 @@
 }
 
 .leaflet-container{
-  height: 90vh;
-  width: 98vw;
+  height: 100%;
+  width: 100%;
   z-index: 1;
-  margin-left: 2vw;
+
 }
 
 /* .map{
@@ -31,24 +31,63 @@
 } */
 
 .dashboard-container{
-  width:98vw;
-  background-color: rgb(0, 0, 0);
-  margin-left: 2vw;
-  display: flex;
-  flex-wrap: wrap
-  
 
+  background-color: rgb(0, 0, 0);
+  display: grid;
+  grid-template-columns: auto auto auto;
+  height: 100vh;
+  gap:20px;
+  padding: 20px;
   
 };
+
+
 .dashboard-container select{
   padding-bottom: 2vw
 }
 
 
-.line-chart,.bar-chart,.stacked{
+.line-chart,.bar-chart,.stacked,.area-chart,.map-container{
   background-color: rgb(17, 17, 17);
   border-radius: 5px;
-  width: fit-content;
-  padding: 20px;
-  margin: 10px;
+  padding: 15px;
+  /* margin: 10px; */
+  /* border:1px solid red; */
+  overflow: hidden;
+}
+
+.map-container{
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end:3
+}
+
+.bar-chart{
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 3;
+  grid-row-end: 5;
+ 
+}
+.stacked{
+  grid-row-start: 3;
+  grid-row-end: 5;
+  grid-column-start: 2;
+  grid-column-end:4 ;
+}
+
+.area-chart{
+  grid-column-start:3;
+  grid-column-end:4 ;
+  grid-row-start: 1;
+  grid-row-end:3;
+  overflow: visible;
+}
+
+.line-chart{
+  grid-column-start:1;
+  grid-column-end:4;
+  grid-row-start:5;
+  grid-row-end:6
 }

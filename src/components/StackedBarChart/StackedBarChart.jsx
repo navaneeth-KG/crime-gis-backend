@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
+import './StackedBarChart.css'
 const StackedBarChart = () => {
     const [data,setData] = useState([])
     const [district,setDistrict] = useState([])
@@ -36,23 +36,16 @@ const StackedBarChart = () => {
     console.log(district);
     
   return (
-    <div>
-      <BarChart
-          width={500}
-          height={500}
+    <ResponsiveContainer height="100%">
+          <BarChart
           data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
+      
         >
-          <CartesianGrid strokeDasharray="3 3" />
+        
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Legend />
+          <Legend className='stacked-legend'/>
           {
 
           district.length!= 0 && district.map(((item,index)=><Bar dataKey={item._id} stackId="a" fill={colors[index % colors.length]} />))
@@ -63,7 +56,9 @@ const StackedBarChart = () => {
           
     
         </BarChart>
-    </div>
+    </ResponsiveContainer>
+
+    
   )
 }
 
