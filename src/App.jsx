@@ -4,7 +4,6 @@
 import Sidebar from './components/Sidebar/Sidebar.jsx';
 import { crimeData } from './data.js';
 import Barchart from './components/Barchart/Barchart.jsx';
-
 import { useState ,useEffect} from 'react';
 import {
   LineChart,
@@ -19,10 +18,10 @@ import "leaflet/dist/leaflet.css"
 import {MapContainer, TileLayer} from 'react-leaflet';
 import {HeatmapLayer} from "react-leaflet-heatmap-layer-v3"
 
-
 import './App.css';
 import StackedBarChart from './components/StackedBarChart/StackedBarChart.jsx';
 import AreaChartt from './components/AreaChartt/AreaChartt.jsx';
+import axios from 'axios';
 
 
 
@@ -37,17 +36,47 @@ const [data3,setData3] = useState(crimeData)
 const [year,setYear] = useState(2001)
 const [state,setState] = useState("KERALA")
 const [points,setPoints] = useState([])
+const [district,setDistrict] = useState([])
+const colors = [
+  
+     "#FF5733", // Red-Orange
+      "#33FF57", // Green
+      "#3357FF", // Blue
+      "#F1C40F", // Yellow
+      "#8E44AD", // Purple
+      "#E67E22", // Orange
+      "#2ECC71", // Light Green
+      "#3498DB", // Light Blue
+      "#E74C3C", // Red
+      "#9B59B6", // Lavender
+      "#FF8D1A", // Bright Orange
+      "#1ABC9C", // Turquoise
+      "#D35400", // Dark Orange
+      "#C0392B", // Dark Red
+      "#2980B9", // Dark Blue
+      "#27AE60", // Dark Green
+      "#F39C12", // Golden Yellow
+      "#8E44AD", // Dark Purple
+      "#2C3E50", // Dark Slate Blue
+      "#F4D03F", // Bright Gold
+      "#34495E"  // Charcoal Gray
+]
 const count = 0
 useEffect(()=>{
-  const newData = data.features.filter(i=> (i.properties["STATE/UT"] === state && i.properties.YEAR == year)).map(item=>{
-    return ({
-      name:item.properties.DISTRICT,
-      murder : item.properties.MURDER,
-      rape: item.properties.RAPE,
-      robbery : item.properties.ROBBERY
-    })
-  })  
-  setData2(newData)
+  // const newData = data.features.filter(i=> (i.properties["STATE/UT"] === state && i.properties.YEAR == year)).map(item=>{
+  //   return ({
+  //     name:item.properties.DISTRICT,
+  //     murder : item.properties.MURDER,
+  //     rape: item.properties.RAPE,
+  //     robbery : item.properties.ROBBERY
+  //   })
+  // })  
+
+  // const newData = await axios.get('http://localhost:4000/line-graph')
+  fetchData()
+
+
+  // setData2(newData)
   const pointData = crimeData.features.map(feature => {
     if (feature.geometry && feature.geometry.coordinates && feature.properties.YEAR && feature.properties.YEAR == year) {
       const [longitude, latitude] = feature.geometry.coordinates;
@@ -71,7 +100,16 @@ useEffect(()=>{
 
  },[year,state])
 
+  const fetchData= async()=>{
+    const newData = await axios.get('http://localhost:4000/line-graph')
+    console.log(newData);
+    
+    setData2(newData.data)
+    const crime = await axios.get("http://localhost:4000/crime")
+    setDistrict(crime.data)
 
+  }
+console.log(data2);
 
   const onClick =()=>{
     console.log(data)
@@ -169,10 +207,7 @@ useEffect(()=>{
      <XAxis dataKey="name" angle={-30}  />
      <YAxis />
      <Tooltip />
-     <Legend />
-     <Line type="monotone" dataKey="murder" stroke="#ff3333" legendType="none"/>
-     <Line type="monotone" dataKey="rape" stroke="#ffb219" />
-     <Line type="monotone" dataKey="robbery" stroke="#5c97f7" />
+     {district.length!= 0 && district.map((item,index)=><Line type="monotone" dot={false} dataKey={item} stroke={colors[index % colors.length]} />)}
      </LineChart>
     </ResponsiveContainer>
   

@@ -1,7 +1,7 @@
 .navbar{
   width: 100vw;
   height:60px;
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(8, 8, 8);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -31,14 +31,12 @@
 } */
 
 .dashboard-container{
-
   background-color: rgb(0, 0, 0);
   display: grid;
   grid-template-columns: auto auto auto;
   height: 100vh;
   gap:20px;
-  padding: 20px;
-  
+  padding:15px;
 };
 
 
@@ -48,9 +46,9 @@
 
 
 .line-chart,.bar-chart,.stacked,.area-chart,.map-container{
-  background-color: rgb(17, 17, 17);
+  background-color: rgb(8, 8, 8);
   border-radius: 5px;
-  padding: 15px;
+  padding: 5px;
   /* margin: 10px; */
   /* border:1px solid red; */
   overflow: hidden;
@@ -68,14 +66,14 @@
   grid-column-end: 2;
   grid-row-start: 3;
   grid-row-end: 5;
+  overflow: scroll;
  
 }
-.stacked{
+.line-chart{
   grid-row-start: 3;
   grid-row-end: 5;
   grid-column-start: 2;
-  grid-column-end:4 ;
-}
+  grid-column-end:4 ;overflow: auto;}
 
 .area-chart{
   grid-column-start:3;
@@ -85,9 +83,10 @@
   overflow: visible;
 }
 
-.line-chart{
+.stacked{
   grid-column-start:1;
   grid-column-end:4;
   grid-row-start:5;
-  grid-row-end:6
+  grid-row-end:7;
+  overflow: scroll;
 }

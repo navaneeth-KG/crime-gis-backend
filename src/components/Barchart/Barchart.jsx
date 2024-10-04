@@ -11,22 +11,22 @@ const Barchart = ({data}) => {
     <Pie
       data={data}
       cx="50%"
-      cy="100%"
+      cy="50%"
       labelLine={false}
-      outerRadius={90}
+      outerRadius={85}
       innerRadius={50} // Adjust inner radius for padding effect
       paddingAngle={2} // Set padding between slices
       dataKey="uv"
       
     >
-      <Legend  className='pie-legend' display={false}/>
+      
       {data.map((entry, index) => (
         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
       ))}\
       
     </Pie>
     <Tooltip />
-    <Legend />
+   
   </PieChart>
     </ResponsiveContainer>
 

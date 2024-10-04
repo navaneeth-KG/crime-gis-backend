@@ -32,8 +32,8 @@ const StackedBarChart = () => {
     }
   
 
-    console.log(data)
-    console.log(district);
+    // console.log(data)
+    // console.log(district);
     
   return (
     <ResponsiveContainer height="100%">
@@ -45,7 +45,7 @@ const StackedBarChart = () => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Legend className='stacked-legend'/>
+          
           {
 
           district.length!= 0 && district.map(((item,index)=><Bar dataKey={item._id} stackId="a" fill={colors[index % colors.length]} />))
