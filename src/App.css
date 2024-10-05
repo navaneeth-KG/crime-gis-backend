@@ -58,7 +58,8 @@
   grid-column-start: 1;
   grid-column-end: 3;
   grid-row-start: 1;
-  grid-row-end:3
+  grid-row-end:3;
+  overflow: hidden;
 }
 
 .bar-chart{
@@ -89,4 +90,18 @@
   grid-row-start:5;
   grid-row-end:7;
   overflow: scroll;
+}
+
+.leaflet-control{
+  display: flex;
+  background-color: rgb(255, 255, 255);
+}
+
+.leaflet-control input{
+  outline: none;
+  border: none;
+  padding: 5px;
+}
+.leaflet-control button{
+ display: none;
 }

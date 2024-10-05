@@ -1,8 +1,9 @@
 
 
 // import OpenLayersMap from './OpenLayersMap.jsx';
-import Sidebar from './components/Sidebar/Sidebar.jsx';
+// import Sidebar from './components/Sidebar/Sidebar.jsx';
 import { crimeData } from './data.js';
+import police from '../police.js';
 import Barchart from './components/Barchart/Barchart.jsx';
 import { useState ,useEffect} from 'react';
 import {
@@ -15,13 +16,18 @@ import {
   ResponsiveContainer
 } from "recharts";
 import "leaflet/dist/leaflet.css"
-import {MapContainer, TileLayer} from 'react-leaflet';
+import {MapContainer, TileLayer,LayersControl,Marker} from 'react-leaflet';
 import {HeatmapLayer} from "react-leaflet-heatmap-layer-v3"
+import SearchLocation from './components/SearchLocation.jsx';
+import { OpenStreetMapProvider } from 'leaflet-geosearch'
+import PrintControl from './components/PrintControl.jsx';
+
 
 import './App.css';
 import StackedBarChart from './components/StackedBarChart/StackedBarChart.jsx';
 import AreaChartt from './components/AreaChartt/AreaChartt.jsx';
 import axios from 'axios';
+
 
 
 
@@ -36,7 +42,9 @@ const [data3,setData3] = useState(crimeData)
 const [year,setYear] = useState(2001)
 const [state,setState] = useState("KERALA")
 const [points,setPoints] = useState([])
+const [stnpoints,setStnpoints] =useState([])
 const [district,setDistrict] = useState([])
+
 const colors = [
   
      "#FF5733", // Red-Orange
@@ -61,7 +69,8 @@ const colors = [
       "#F4D03F", // Bright Gold
       "#34495E"  // Charcoal Gray
 ]
-const count = 0
+
+
 useEffect(()=>{
   // const newData = data.features.filter(i=> (i.properties["STATE/UT"] === state && i.properties.YEAR == year)).map(item=>{
   //   return ({
@@ -83,8 +92,21 @@ useEffect(()=>{
       return [latitude,longitude]; 
     }
     return null}).filter(i => i !== null)
-  setPoints(pointData)
+    setPoints(pointData)
+   setStnpoints(police.features.map(feature => {
+    if (feature.geometry && feature.geometry.coordinates) {
+      const [longitude, latitude] = feature.geometry.coordinates;
+      return [latitude,longitude]; 
+    }
+    return null}).filter(i => i !== null))
+  
+
+
+
+
+
   getCrime()
+  
 
   
   // const newData3 = data.features.filter(i=> (i.properties["STATE/UT"] === "KERALA" && i.properties.YEAR == year)).map(item=>{
@@ -110,6 +132,9 @@ useEffect(()=>{
 
   }
 console.log(data2);
+console.log({stnpoints})
+console.log({points})
+console.log({police})
 
   const onClick =()=>{
     console.log(data)
@@ -150,7 +175,7 @@ console.log(data2);
     <nav className='navbar' onClick={onClick}>
       <h1 style={{color:'orange'}}>icfoss</h1>
 
-       <input type='text' placeholder="search"/>
+       {/* <input type='text' placeholder="search"/> */}
 
       <ul>        
         <li>sign in</li>
@@ -165,13 +190,15 @@ console.log(data2);
   <div className="dashboard-container">
     <div className="map-container">
     <MapContainer center={[8.524139, 76.936638
-      ]} zoom={13}>
+      ]} zoom={16}>
+        <LayersControl>
+
+        <LayersControl.BaseLayer checked name="OpenStreetMap">
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'>
-
-    </TileLayer>
-
-     {points.length != 0 && <HeatmapLayer
+        url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'>
+          
+        </TileLayer>
+        {points.length != 0 && <HeatmapLayer
         
         fitBoundsOnLoad
         fitBoundsOnUpdate
@@ -184,7 +211,35 @@ console.log(data2);
         
         />
     }
+      
     
+        </LayersControl.BaseLayer>
+       
+  
+  {stnpoints.map((coord, index) => (
+        <Marker key={index} position={[coord[0], coord[1]]}>
+          
+        </Marker>
+      ))}
+
+
+
+
+
+        </LayersControl>
+       
+    
+       
+      
+
+  
+    
+    <SearchLocation provider={new OpenStreetMapProvider()} />
+    <PrintControl/>
+  
+     
+   
+     
    
   </MapContainer>
 
