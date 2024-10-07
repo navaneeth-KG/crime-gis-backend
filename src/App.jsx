@@ -1,7 +1,4 @@
 
-
-// import OpenLayersMap from './OpenLayersMap.jsx';
-// import Sidebar from './components/Sidebar/Sidebar.jsx';
 import { crimeData } from './data.js';
 import police from '../police.js';
 import Barchart from './components/Barchart/Barchart.jsx';
@@ -21,12 +18,10 @@ import {HeatmapLayer} from "react-leaflet-heatmap-layer-v3"
 import SearchLocation from './components/SearchLocation.jsx';
 import { OpenStreetMapProvider } from 'leaflet-geosearch'
 import PrintControl from './components/PrintControl.jsx';
-
-
-import './App.css';
 import StackedBarChart from './components/StackedBarChart/StackedBarChart.jsx';
 import AreaChartt from './components/AreaChartt/AreaChartt.jsx';
 import axios from 'axios';
+import './App.css';
 
 
 
@@ -41,6 +36,8 @@ const [data2,setData2] = useState(crimeData)
 const [data3,setData3] = useState(crimeData)
 const [year,setYear] = useState(2001)
 const [state,setState] = useState("KERALA")
+const [yearArr,setYearArr]=useState([])
+const [stateArr,setStateArr]=useState([])
 const [points,setPoints] = useState([])
 const [stnpoints,setStnpoints] =useState([])
 const [district,setDistrict] = useState([])
@@ -72,20 +69,8 @@ const colors = [
 
 
 useEffect(()=>{
-  // const newData = data.features.filter(i=> (i.properties["STATE/UT"] === state && i.properties.YEAR == year)).map(item=>{
-  //   return ({
-  //     name:item.properties.DISTRICT,
-  //     murder : item.properties.MURDER,
-  //     rape: item.properties.RAPE,
-  //     robbery : item.properties.ROBBERY
-  //   })
-  // })  
-
-  // const newData = await axios.get('http://localhost:4000/line-graph')
   fetchData()
 
-
-  // setData2(newData)
   const pointData = crimeData.features.map(feature => {
     if (feature.geometry && feature.geometry.coordinates && feature.properties.YEAR && feature.properties.YEAR == year) {
       const [longitude, latitude] = feature.geometry.coordinates;
@@ -99,36 +84,27 @@ useEffect(()=>{
       return [latitude,longitude]; 
     }
     return null}).filter(i => i !== null))
-  
-
-
 
 
 
   getCrime()
   
-
-  
-  // const newData3 = data.features.filter(i=> (i.properties["STATE/UT"] === "KERALA" && i.properties.YEAR == year)).map(item=>{
-  //   return ({
-  //     name:item.properties.DISTRICT,
-  //     murder : item.properties.MURDER,
-  //     rape: item.properties.RAPE,
-  //     robbery : item.properties.ROBBERY
-  //   })
-  // })  
-  // setData2(newData3)
   
 
  },[year,state])
 
   const fetchData= async()=>{
-    const newData = await axios.get('http://localhost:4000/line-graph')
+    const newData = await axios.get(`http://localhost:4000/line-graph/${year}/${state}`)
     console.log(newData);
     
     setData2(newData.data)
     const crime = await axios.get("http://localhost:4000/crime")
     setDistrict(crime.data)
+
+    const yearArr = await axios.get("http://localhost:4000/year")
+    setYearArr(yearArr.data)
+    const stateArr = await axios.get("http://localhost:4000/states")
+    setStateArr(stateArr.data)
 
   }
 console.log(data2);
@@ -174,15 +150,29 @@ console.log({police})
     <>
     <nav className='navbar' onClick={onClick}>
       <h1 style={{color:'orange'}}>icfoss</h1>
+      <div className="right">
+      <select onChange={(e)=>{setYear(e.target.value)}}>
+      <option value={year} disabled>{year}</option>
+      {
+        yearArr.map(item=><option value={item._id}>{item._id}</option>)
+      }
+     </select>
+    <select onChange={(e)=>{setState(e.target.value)}}>
+    <option value={state} disabled>{state}</option>
+     {
+      stateArr.map(item=><option value={item._id}>{item._id}</option>)
+     }
+    </select> 
+    
+      </div>
+ 
 
-       {/* <input type='text' placeholder="search"/> */}
-
-      <ul>        
+      {/* <ul>        
         <li>sign in</li>
-      </ul>
+      </ul> */}
 
     </nav>
-    {/* <Sidebar/> */}
+
   
 
   
@@ -191,14 +181,15 @@ console.log({police})
     <div className="map-container">
     <MapContainer center={[8.524139, 76.936638
       ]} zoom={16}>
-        <LayersControl>
+        
 
-        <LayersControl.BaseLayer checked name="OpenStreetMap">
+      
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'>
-          
-        </TileLayer>
-        {points.length != 0 && <HeatmapLayer
+        url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'/>
+
+        <LayersControl position='topright'>
+        <LayersControl.Overlay checked name ="heatmap">
+         {points.length != 0 && <HeatmapLayer
         
         fitBoundsOnLoad
         fitBoundsOnUpdate
@@ -211,28 +202,20 @@ console.log({police})
         
         />
     }
-      
-    
-        </LayersControl.BaseLayer>
-       
-  
-  {stnpoints.map((coord, index) => (
-        <Marker key={index} position={[coord[0], coord[1]]}>
+
+         </LayersControl.Overlay >
+         {/* <LayersControl.Overlay checked name="police station locations">
+         {stnpoints.map((coord, index) => (
+          <Marker key={index} position={[coord[0], coord[1]]}>
           
-        </Marker>
-      ))}
+          </Marker>
+        ))}
 
 
-
-
+         </LayersControl.Overlay> */}
 
         </LayersControl>
-       
-    
-       
-      
-
-  
+          
     
     <SearchLocation provider={new OpenStreetMapProvider()} />
     <PrintControl/>
@@ -248,33 +231,26 @@ console.log({police})
 
 
     <div className="line-chart">
-    <select onChange={(e)=>{setYear(e.target.value)}}>
-     {data.features.filter((i)=> (i.properties["STATE/UT"] === "KERALA")).map((item,idx)=>(<option value={item.properties.YEAR} key={idx} >{item.properties.YEAR}</option>))}
-    </select>
-    <select onChange={(e)=>{setState(e.target.value)}}>
-     <option value="KERALA">KERALA</option>
-     <option value="ANDHRA PRADESH">ANDHRA PRADESH</option>
-     <option value="KARNATAKA">KARNATAKA</option>
-     <option value="TAMIL NADU">TAMIL NADU</option>
-    </select>
+  
     <ResponsiveContainer>
     <LineChart  data={data2}>  
      <XAxis dataKey="name" angle={-30}  />
      <YAxis />
      <Tooltip />
+     {/* <Legend/> */}
      {district.length!= 0 && district.map((item,index)=><Line type="monotone" dot={false} dataKey={item} stroke={colors[index % colors.length]} />)}
      </LineChart>
     </ResponsiveContainer>
   
     </div>
     <div className="bar-chart">
-      <Barchart data={ getCrime()}/>
+      <Barchart data={getCrime()}/>
     </div>
     <div className="stacked">
-      <StackedBarChart/>
+      <StackedBarChart state={state}/>
     </div>
     <div className="area-chart">
-      <AreaChartt/>
+      <AreaChartt state={state}/>
     </div>
    
 
